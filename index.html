@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>The ASTRA SCITT</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+    <script>
+function initialize() {
+  var myLatlng = new google.maps.LatLng(51.676531,-0.609992);
+  var mapOptions = {
+    zoom: 11,
+    center: myLatlng
+  }
+  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+var marker_1 = new google.maps.Marker({position: new google.maps.LatLng(51.580877,-0.5483964), map: map, title: 'Gerrards Cross CE Primary School', animation:google.maps.Animation.DROP});
+var marker_2 = new google.maps.Marker({position: new google.maps.LatLng(51.6104521,-0.6364153), map: map, title: 'St Mary and All Saints CE Primary School', animation:google.maps.Animation.DROP});
+var marker_3 = new google.maps.Marker({position: new google.maps.LatLng(51.5477252,-0.5889505), map: map, title: 'The Stoke Poges School', animation:google.maps.Animation.DROP});
+var marker_4 = new google.maps.Marker({position: new google.maps.LatLng(51.599864,-0.564598), map: map, title: 'St Joseph’s Catholic Primary School', animation:google.maps.Animation.DROP});
+var marker_5 = new google.maps.Marker({position: new google.maps.LatLng(51.614306,-0.607787), map: map, title: 'Seer Green CE School', animation:google.maps.Animation.DROP});
+var marker_6 = new google.maps.Marker({position: new google.maps.LatLng(51.608324,-0.560107), map: map, title: 'Chalfont St Peter CE Academy', animation:google.maps.Animation.DROP});
+var marker_7 = new google.maps.Marker({position: new google.maps.LatLng(51.616528,-0.592046), map: map, title: 'Jordans School', animation:google.maps.Animation.DROP});
+var marker_8 = new google.maps.Marker({position: new google.maps.LatLng(51.535939,-0.520116), map: map, title: 'Iver Heath Infant School', animation:google.maps.Animation.DROP});
+var marker_9 = new google.maps.Marker({position: new google.maps.LatLng(51.724197,-0.654447), map: map, title: 'Chartridge Combined School', animation:google.maps.Animation.DROP});
+var marker_10 = new google.maps.Marker({position: new google.maps.LatLng(51.6286247,-0.5737332), map: map, title: 'Chalfont St Giles Village School', animation:google.maps.Animation.DROP});
+var marker_11 = new google.maps.Marker({position: new google.maps.LatLng(51.701567,-0.615495), map: map, title: 'Thomas Harding Junior School', animation:google.maps.Animation.DROP});
+var marker_12 = new google.maps.Marker({position: new google.maps.LatLng(51.675591,-0.594225), map: map, title: 'Woodside Junior School', animation:google.maps.Animation.DROP});
+var marker_13 = new google.maps.Marker({position: new google.maps.LatLng(51.676531,-0.609992), map: map, title: 'Dr Challoner’s Grammar School', animation:google.maps.Animation.DROP, icon:'DCGS_Crest.png'});
+var marker_14 = new google.maps.Marker({position: new google.maps.LatLng(51.709434,-0.621852), map: map, title: 'Chiltern Hills Academy', animation:google.maps.Animation.BOUNCE});
+var marker_15 = new google.maps.Marker({position: new google.maps.LatLng(51.602879,-0.640426), map: map, title: 'The Beaconsfield School', animation:google.maps.Animation.BOUNCE});
+var marker_16 = new google.maps.Marker({position: new google.maps.LatLng(51.69842,-0.70435), map: map, title: 'The Misbourne School', animation:google.maps.Animation.BOUNCE});
+var marker_17 = new google.maps.Marker({position: new google.maps.LatLng(51.66634,-0.698844), map: map, title: 'Holmer Green Senior School', animation:google.maps.Animation.BOUNCE});
+var marker_18 = new google.maps.Marker({position: new google.maps.LatLng(51.66759,-0.593511), map: map, title: 'The Amersham School', animation:google.maps.Animation.BOUNCE});
+var marker_19 = new google.maps.Marker({position: new google.maps.LatLng(51.667299,-0.570126), map: map, title: 'Dr Challoner’s High School', animation:google.maps.Animation.DROP});
+var marker_20 = new google.maps.Marker({position: new google.maps.LatLng(51.813785,-0.801702), map: map, title: 'Aylesbury Grammar School', animation:google.maps.Animation.DROP});
+var marker_21 = new google.maps.Marker({position: new google.maps.LatLng(51.70893,-0.600382), map: map, title: 'Chesham Grammar School', animation:google.maps.Animation.DROP});
+var marker_22 = new google.maps.Marker({position: new google.maps.LatLng(51.633279,-0.743623), map: map, title: 'Wycombe Grange', animation:google.maps.Animation.DROP});
+var marker_23 = new google.maps.Marker({position: new google.maps.LatLng(51.813162,-0.823975), map: map, title: 'Sir Henry Floyd Grammar School', animation:google.maps.Animation.DROP});
+var marker_24 = new google.maps.Marker({position: new google.maps.LatLng(51.812512,-0.803101), map: map, title: 'Aylesbury High School', animation:google.maps.Animation.DROP});
+var marker_25 = new google.maps.Marker({position: new google.maps.LatLng(51.62602,-0.65537), map: map, title: 'Alfriston School', animation:google.maps.Animation.DROP});
+var marker_26 = new google.maps.Marker({position: new google.maps.LatLng(51.603497,-0.643232), map: map, title: 'Beaconsfield High School', animation:google.maps.Animation.DROP});
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>
