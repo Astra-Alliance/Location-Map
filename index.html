@@ -1,28 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<head>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <title>ASTRA Alliance</title>
-    <style>
-      html, body, #map {
-        height: 100%;
-        margin: 0px;
-        padding: 0px
-      }
-    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="js/tabletop1.3.4.js"></script>
     <script src="js/highlight.js"></script>
     <script src="js/sheetsee.js"></script>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+    </style>
   </head>
   <body>
     <div id="map"></div>
     <script type="text/javascript">
+			var type = "SCITT";
       var map;
       
       function requestData() {
-        var KEY = 
         Tabletop.init({
           key: "1nGRNFKDKLpkSfeznS83I8E_iXiUqoWSsvT-pSW2LcC8",
           callback: displayData,
@@ -31,16 +28,71 @@
       }
       
       function displayData(data) {
-        console.log(data);
-        $.each(data, function(i, value) {
-          console.log(value.Name);
-          var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(value["position-lat"],value["position-long"]),
-            map: map,
-            title: value.name,
-            animation:google.maps.Animation.DROP
-          });
-        });
+
+				$.each(data, function(i, value) {
+
+					if (type == "ALL" || value.role == type || value.role.indexOf(type) >= 0) {
+
+						var anim;
+						if (value.highlight && value.highlight == "TRUE") {
+							anim = google.maps.Animation.BOUNCE;
+						} else {
+							anim = google.maps.Animation.DROP;
+						}
+
+						var marker = new google.maps.Marker({
+							map: map,
+							title: value.name,
+							place: {
+								//placeId: value["googleplaceid"],
+								location: {lat: Number(value["position-lat"]), lng: Number(value["position-long"])},
+								query: value.name
+							},
+							attribution: {
+								source: "Astra Alliance",
+								webUrl: value.website
+							},
+							animation: anim
+						});
+
+						var infoContent = '<div id="content">'+
+							'<div id="siteNotice"></div>';
+						if (value.logo) {
+							infoContent += '<div>' + 
+								'<img style="float: left; display: inline; height: 2em; padding-right: 0.4em;" src="' + value.logo + '" title="' + value.name + '" alt="' + value.name + '"/>' +
+								'<h1 style="display: inline;" class="firstHeading">' + value.name + '</h1>' +
+								'</div>';
+						} else {
+							infoContent += '<h1 class="firstHeading">' + value.name + '</h1>';
+						}
+
+						infoContent += '<div id="bodyContent">'+
+							'<p>Offers <b>' + value.role +'</b></p>' +
+							'<p>' + value.details + '</p>'
+						
+						if (value.neareststation) {
+							infoContent += '<div><h4>Transport</h4><p>Nearest Station is <strong>' + value.neareststation + '</strong>, which is <a href="' + value.routelink + ' target="_blank"><strong>' + value.distancefromstation + '</strong></a> away and on the ' + value.trainline + '</p></div></div>';
+						}
+						
+						if (value.website) {
+							infoContent += '<p>Website: <a href="' + value.website + '">' + value.website + '</a></p></div></div>';
+						}
+						if (value.astralink) {
+							infoContent += '<p>Further Details available on the: <a href="' + value.astralink + '">Astra Website</a></p></div></div>';
+						}
+
+						var infoWindow = new google.maps.InfoWindow({
+							content: infoContent
+						});
+
+						marker.addListener("click", function() {
+							infoWindow.open(map, marker);
+						});
+
+					}
+
+				});
+				
       }
       
       function initMap() {
@@ -51,7 +103,7 @@
       }
     </script>
     <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwO34xqNaBKqSDIjQj4-okudSlRwCkpkg&callback=initMap">
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwO34xqNaBKqSDIjQj4-okudSlRwCkpkg&callback=initMap&signed_in=true">
     </script>
   </body>
 </html>
