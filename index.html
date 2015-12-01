@@ -3,7 +3,7 @@
 	<head>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>ASTRA Alliance</title>
+    <title>ASTRA Map</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="js/tabletop1.3.4.js"></script>
     <script src="js/highlight.js"></script>
@@ -18,89 +18,137 @@
     <script type="text/javascript">
 			var type = "SCITT";
       var map;
+			var markers = [];
+			var info;
+			
+			function requestData() {
+				Tabletop.init({
+					key: "1nGRNFKDKLpkSfeznS83I8E_iXiUqoWSsvT-pSW2LcC8",
+					callback: displayData,
+					simpleSheet: true
+				})
+			}
       
-      function requestData() {
-        Tabletop.init({
-          key: "1nGRNFKDKLpkSfeznS83I8E_iXiUqoWSsvT-pSW2LcC8",
-          callback: displayData,
-          simpleSheet: true
-        })
-      }
-      
+			function addMarker(value, timeout) {
+
+				window.setTimeout(function() {
+
+					var marker = new google.maps.Marker({
+						title: value.name,
+						place: {
+							//placeId: value["googleplaceid"],
+							location: {lat: Number(value["position-lat"]), lng: Number(value["position-long"])},
+							query: value.name
+						},
+						attribution: {
+							source: "Astra Alliance",
+							webUrl: value.website
+						},
+					});
+
+					if (value.highlight && value.highlight == "TRUE") {
+						marker.setAnimation(google.maps.Animation.BOUNCE);
+					} else {
+						marker.setAnimation(google.maps.Animation.DROP);
+					}
+					
+					if (value.highlight && value.highlight == "TRUE") {
+						marker.setAnimation(google.maps.Animation.BOUNCE);
+					} else {
+						marker.setAnimation(google.maps.Animation.DROP);
+					}
+
+					if (value.markerimage) {
+						var icon = {
+							url: value.markerimage,
+							size: new google.maps.Size(48, 48),
+							origin: new google.maps.Point(0, 0),
+							anchor: new google.maps.Point(24, 24)
+						};
+						marker.setIcon(icon);
+					} else if (value.markerpath) {
+						var icon = {
+							path: value.markerpath,
+							fillColor: value.markerpathfill,
+							fillOpacity: Number(value.markerpathfillopacity),
+							scale: Number(value.markerpathscale),
+							strokeColor: value.markerpathstroke,
+							strokeWeight: Number(value.markerpathstrokeweight)
+						};
+						marker.setIcon(icon);
+					}
+
+					var infoContent = '<div id="content">'+
+						'<div id="siteNotice"></div>';
+					if (value.logo) {
+						infoContent += '<div>' + 
+							'<img style="float: left; display: inline; height: 2em; padding-right: 0.4em;" src="' + value.logo + '" title="' + value.name + '" alt="' + value.name + '"/>' +
+							'<h1 style="display: inline;" class="firstHeading">' + value.name + '</h1>' +
+							'</div>';
+					} else {
+						infoContent += '<h1 class="firstHeading">' + value.name + '</h1>';
+					}
+
+					infoContent += '<div id="bodyContent">'+
+						'<p>Offers <b>' + value.role +'</b></p>' +
+						'<p>' + value.details + '</p>'
+
+					if (value.neareststation) {
+						infoContent += '<div><h4>Transport</h4><p>Nearest Station is <strong>' + value.neareststation + '</strong>, which is <a href="' + value.routelink + '" target="_blank"><strong>' + value.distancefromstation + '</strong></a> away and on the ' + value.trainline + '</p></div></div>';
+					}
+
+					if (value.website) {
+						infoContent += '<p>Website: <a href="' + value.website + '" target="_blank">' + value.website + '</a></p></div></div>';
+					}
+					if (value.astralink) {
+						infoContent += '<p>Further Details available on the: <a href="' + value.astralink + '" target="_blank">Astra Website</a></p></div></div>';
+					}
+
+					marker.addListener("click", function() {
+						if (marker.getAnimation() !== null) {marker.setAnimation(null);}
+						if (!info) {
+							info = new google.maps.InfoWindow({
+								content: infoContent
+							});
+						} else {
+							info.close();
+							info.setContent(infoContent);
+						}
+						info.open(map, marker);
+					});
+
+					marker.setMap(map);
+					markers.push(marker);
+					
+  			}, timeout);
+
+			}
+			
       function displayData(data) {
 
 				$.each(data, function(i, value) {
 
 					if (type == "ALL" || value.role == type || value.role.indexOf(type) >= 0) {
 
-						var anim;
-						if (value.highlight && value.highlight == "TRUE") {
-							anim = google.maps.Animation.BOUNCE;
-						} else {
-							anim = google.maps.Animation.DROP;
-						}
-
-						var marker = new google.maps.Marker({
-							map: map,
-							title: value.name,
-							place: {
-								//placeId: value["googleplaceid"],
-								location: {lat: Number(value["position-lat"]), lng: Number(value["position-long"])},
-								query: value.name
-							},
-							attribution: {
-								source: "Astra Alliance",
-								webUrl: value.website
-							},
-							animation: anim
-						});
-
-						var infoContent = '<div id="content">'+
-							'<div id="siteNotice"></div>';
-						if (value.logo) {
-							infoContent += '<div>' + 
-								'<img style="float: left; display: inline; height: 2em; padding-right: 0.4em;" src="' + value.logo + '" title="' + value.name + '" alt="' + value.name + '"/>' +
-								'<h1 style="display: inline;" class="firstHeading">' + value.name + '</h1>' +
-								'</div>';
-						} else {
-							infoContent += '<h1 class="firstHeading">' + value.name + '</h1>';
-						}
-
-						infoContent += '<div id="bodyContent">'+
-							'<p>Offers <b>' + value.role +'</b></p>' +
-							'<p>' + value.details + '</p>'
-						
-						if (value.neareststation) {
-							infoContent += '<div><h4>Transport</h4><p>Nearest Station is <strong>' + value.neareststation + '</strong>, which is <a href="' + value.routelink + ' target="_blank"><strong>' + value.distancefromstation + '</strong></a> away and on the ' + value.trainline + '</p></div></div>';
-						}
-						
-						if (value.website) {
-							infoContent += '<p>Website: <a href="' + value.website + '">' + value.website + '</a></p></div></div>';
-						}
-						if (value.astralink) {
-							infoContent += '<p>Further Details available on the: <a href="' + value.astralink + '">Astra Website</a></p></div></div>';
-						}
-
-						var infoWindow = new google.maps.InfoWindow({
-							content: infoContent
-						});
-
-						marker.addListener("click", function() {
-							infoWindow.open(map, marker);
-						});
+						addMarker(value, i * 50);
 
 					}
 
 				});
-				
+
       }
       
-      function initMap() {
-        map = new google.maps.Map(document.getElementById("map"), {
-          center: {lat: 51.676531, lng: -0.609992}, zoom: 11
-        });
-        requestData();
-      }
+			function initMap() {
+				map = new google.maps.Map(document.getElementById("map"), {
+					center: {lat: 51.676531, lng: -0.609992}, zoom: 11
+				});
+				requestData();
+				map.addListener("click", function() {
+					if (info) {
+						info.close();
+					}
+				});
+			}
     </script>
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwO34xqNaBKqSDIjQj4-okudSlRwCkpkg&callback=initMap&signed_in=true">
