@@ -49,9 +49,11 @@
 			  var sf = "https://docs.google.com/spreadsheets/d/1nGRNFKDKLpkSfeznS83I8E_iXiUqoWSsvT-pSW2LcC8/gviz/tq?tqx=out:json&gid=0";
         $.ajax({url: sf, type: 'GET', dataType: 'jsonp'})
         .done(function(response) {
-          if (response != 200) console.log(response);
+          if (response != 200 && response != "200") console.log(response);
         })
-        .fail((e) => console.log(e.status));
+        .fail(function(e) {
+          if(e.status != 200 && e.status != "200") console.log(e.status);
+        })
 			}
       
 			function addMarker(value, timeout) {
