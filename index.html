@@ -6,9 +6,7 @@
 		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <title>ASTRA Map</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="js/tabletop1.3.4.js"></script>
     <script src="js/highlight.js"></script>
-    <script src="js/sheetsee.js"></script>
     <style type="text/css">
       html, body { height: 100%; margin: 0; padding: 0; }
       #map { height: 100%; }
@@ -22,12 +20,38 @@
 			var markers = [];
 			var info;
 			
+			function showData(data) {
+			  if (data.status != "ok") return;
+        
+			  var _processed = [];
+			  $.each(data.table.rows, function(i, row) {
+
+					var _row = {};
+          $.each(row.c, function(j, cell) {
+            if (data.table.cols[j] && data.table.cols[j].label) {
+              _row[data.table.cols[j].label.toLowerCase()] = cell ? cell.v : null;
+            }
+          });
+          _processed.push(_row);
+
+				});
+				
+				displayData(_processed);
+				
+			}
+			
 			function requestData() {
-				Tabletop.init({
-					key: "1nGRNFKDKLpkSfeznS83I8E_iXiUqoWSsvT-pSW2LcC8",
-					callback: displayData,
-					simpleSheet: true
-				})
+			  google.visualization = {
+			    Query: {
+			      setResponse : showData
+			    }
+			  }
+			  var sf = "https://docs.google.com/spreadsheets/d/1nGRNFKDKLpkSfeznS83I8E_iXiUqoWSsvT-pSW2LcC8/gviz/tq?tqx=out:json&gid=0";
+        $.ajax({url: sf, type: 'GET', dataType: 'jsonp'})
+        .done(function(response) {
+          if (response != 200) console.log(response);
+        })
+        .fail((e) => console.log(e.status));
 			}
       
 			function addMarker(value, timeout) {
@@ -82,7 +106,7 @@
 					var infoContent = '<div id="content">'+
 						'<div id="siteNotice"></div>';
 					if (value.logo) {
-						infoContent += '<div>' + 
+						infoContent += '<div>' +
 							'<img style="float: left; display: inline; height: 2em; padding-right: 0.4em;" src="' + value.logo + '" title="' + value.name + '" alt="' + value.name + '"/>' +
 							'<h1 style="display: inline;" class="firstHeading">' + value.name + '</h1>' +
 							'</div>';
@@ -129,7 +153,7 @@
 
 				$.each(data, function(i, value) {
 
-					if (type == "ALL" || value.role == type || value.role.indexOf(type) >= 0) {
+					if (type == "ALL" || value.role == type || (value.role && value.role.indexOf(type) >= 0)) {
 
 						addMarker(value, i * 50);
 
@@ -154,5 +178,8 @@
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwO34xqNaBKqSDIjQj4-okudSlRwCkpkg&callback=initMap&signed_in=true">
     </script>
+    <!-- <script async defer
+      src="https://maps.googleapis.com/maps/api/js?callback=initMap">
+    </script> -->
   </body>
 </html>
