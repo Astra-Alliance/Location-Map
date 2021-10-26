@@ -29,7 +29,7 @@
 					var _row = {};
           $.each(row.c, function(j, cell) {
             if (data.table.cols[j] && data.table.cols[j].label) {
-              _row[data.table.cols[j].label.toLowerCase()] = cell ? cell.v : null;
+              _row[data.table.cols[j].label.toLowerCase()] = cell ? cell.v : "";
             }
           });
           _processed.push(_row);
@@ -118,7 +118,7 @@
 
 					infoContent += '<div id="bodyContent">'+
 						'<p>Offers <b>' + value.role +'</b></p>' +
-						'<p>' + value.details + '</p>'
+						'<p>' + (value.details || "") + '</p>'
 
 					if (value.neareststation) {
 						infoContent += '<div><h4>Transport</h4><p>Nearest Station is <strong>' + value.neareststation + '</strong>, which is <a href="' + value.routelink + '" target="_blank"><strong>' + value.distancefromstation + '</strong></a> away and on the ' + value.trainline + '</p></div></div>';
